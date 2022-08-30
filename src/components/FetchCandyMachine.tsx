@@ -1,10 +1,6 @@
 import { useConnection } from "@solana/wallet-adapter-react"
 import { PublicKey } from "@solana/web3.js"
 import { Metaplex } from "@metaplex-foundation/js"
-import {
-  findCandyMachineByAddressOperation,
-  FindCandyMachineByAddressInput,
-} from "@metaplex-foundation/js"
 import { FC, useEffect, useState } from "react"
 import styles from "../styles/custom.module.css"
 
@@ -26,15 +22,10 @@ export const FetchCandyMachine: FC = () => {
 
     // fetch candymachine data
     try {
-      const candyMachine = await metaplex.operations().execute(
-        findCandyMachineByAddressOperation({
-          address: new PublicKey(candyMachineAddress),
-        })
-      )
-
-      let fetchResult = await fetch(candyMachine.items[0].uri)
-      let json = await fetchResult.json()
-      console.log(json)
+      const candyMachine = await metaplex
+        .candyMachines()
+        .findByAddress({ address: new PublicKey(candyMachineAddress) })
+        .run()
 
       setCandyMachineData(candyMachine)
     } catch (e) {
