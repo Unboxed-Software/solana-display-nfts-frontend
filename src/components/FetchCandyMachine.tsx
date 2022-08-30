@@ -26,13 +26,15 @@ export const FetchCandyMachine: FC = () => {
 
     // fetch candymachine data
     try {
-      const candyMachinePublicKey: FindCandyMachineByAddressInput = {
-        address: new PublicKey(candyMachineAddress),
-      }
+      const candyMachine = await metaplex.operations().execute(
+        findCandyMachineByAddressOperation({
+          address: new PublicKey(candyMachineAddress),
+        })
+      )
 
-      const candyMachine = await metaplex
-        .operations()
-        .execute(findCandyMachineByAddressOperation(candyMachinePublicKey))
+      let fetchResult = await fetch(candyMachine.items[0].uri)
+      let json = await fetchResult.json()
+      console.log(json)
 
       setCandyMachineData(candyMachine)
     } catch (e) {
